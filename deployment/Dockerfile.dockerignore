@@ -1,0 +1,14 @@
+*
+!service
+!pyproject.toml
+!uv.lock
+!README.md
+!alembic
+!alembic.ini
+
+# For test purposes
+!Makefile
+!tests
+!.env.test
+configs/overrides
+!configs/**

@@ -1,0 +1,6 @@
+.python-version
+.venv/
+.helm/
+werf*
+.git*
+.idea

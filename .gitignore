@@ -1,0 +1,7 @@
+.venv
+.env
+.idea
+configs/overrides
+.ruff_cache
+__pycache__
+.coverage

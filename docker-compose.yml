@@ -1,0 +1,46 @@
+name: service-service
+
+x-common: &common
+  build:
+    context: .
+    dockerfile: deployment/Dockerfile
+  depends_on:
+    - postgres
+  profiles:
+    - "dev-app"
+  env_file:
+    - ${ENV_FILE:-.env}
+    - ${ENV_FILE_OVERRIDE:-${ENV_FILE:-.env}}
+  environment:
+    DB_PG_HOST: "postgres"
+    DB_PG_PORT: 5432
+  networks:
+    - service_network
+
+services:
+  postgres:
+    image: postgres:17
+    ports:
+      - "${EXPOSED_DB_PORT:-5434}:5432"
+    env_file:
+      - ${ENV_FILE:-.env}
+    networks:
+      - service_network
+
+  web_app:
+    <<: *common
+    ports:
+      - "${EXPOSED_APP_PORT:-8000}:8000"
+    command: >
+      sh -c "PYTHONPATH=/app uv run --no-sync gunicorn --worker-class uvicorn.workers.UvicornH11Worker --workers 2 --bind 0.0.0.0:8000 pnl.web_app:app"
+
+  scheduler:
+    <<: *common
+    command: >
+      sh -c "PYTHONPATH=/app uv run --no-sync -m service.scheduler"
+
+
+networks:
+  service_network:
+    name: service_network_${ENVIRONMENT}
+

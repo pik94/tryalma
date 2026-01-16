@@ -1,0 +1,77 @@
+[project]
+name = "service"
+version = "0.1.0"
+description = "Service"
+readme = "README.md"
+authors = []
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.16.5",
+    "asyncpg>=0.30.0",
+    "fastapi>=0.117.1",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.11.0",
+    "pydantic[email]>=2.11.9",
+    "sqlalchemy[asyncio]>=2.0.43",
+    "sqlmodel>=0.0.25",
+    "structlog>=25.4.0",
+    "uvicorn>=0.34.0",
+    "apscheduler>=3.11.0",
+    "pyjwt>=2.10.1",
+    "gunicorn>=23.0.0",
+    "sentry-sdk>=2.43.0",
+    "jinja2>=3.1.6",
+    "cryptography>=46.0.3",
+    "rich>=14.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "asgi-lifespan>=2.1.0",
+    "faker>=37.11.0",
+    "pytest",
+    "coverage>=7.10.1",
+    "pytest-asyncio>=1.2.0",
+    "pytest-dotenv>=0.5.2",
+    "ruff>=0.11.10",
+    "respx>=0.22.0",
+]
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+env_override_existing_values = 1
+filterwarnings = [
+    "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+    "ignore::DeprecationWarning"
+]
+env_files = [
+    "./configs/.env.test",
+    "./configs/overrides/.env.test"
+]
+
+
+# opencv breaks coverage so we need to ignore something
+# Details: https://github.com/nedbat/coveragepy/issues/1653#issuecomment-2383574150
+[tool.coverage.run]
+omit = [
+    "config.py",
+    "config-3.py",
+    "/tmp/*"
+    ]
+
+[tool.ruff]
+target-version = "py313"
+exclude = [
+    ".git",
+    ".venv",
+    "alembic",
+]
+fix = true
+unsafe-fixes = false
+show-fixes = true
+line-length = 120
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "single"

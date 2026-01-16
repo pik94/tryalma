@@ -6,7 +6,11 @@ from typing import Self
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from service.database import Database, create_engine
+from service.services.attorneys.service import AttorneyService
+from service.services.blob_storage.service import BlobStorageService
+from service.services.email_service.service import EmailService
 from service.services.healthcheck.service import HealthCheckService
+from service.services.leads.service import LeadService
 from service.settings import (
     DatabaseSettings,
     AppSettings,
@@ -59,3 +63,19 @@ class MainContainer:
     @cached_property
     def healthcheck_service(self) -> HealthCheckService:
         return HealthCheckService()
+
+    @cached_property
+    def blob_storage_service(self) -> BlobStorageService:
+        return BlobStorageService()
+
+    @cached_property
+    def lead_service(self) -> LeadService:
+        return LeadService()
+
+    @cached_property
+    def email_service(self) -> EmailService:
+        return EmailService()
+
+    @cached_property
+    def attorney_service(self) -> AttorneyService:
+        return AttorneyService()

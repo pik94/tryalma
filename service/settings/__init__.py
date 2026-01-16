@@ -16,6 +16,10 @@ class AppSettings(BaseSettings):
 
     jwt_public_key: SecretBytes = b'public-key'
 
+    # Rate limiting settings
+    rate_limit: str = '100/hour'  # Default: 100 requests per hour
+    rate_limit_period: int = 3600  # Default: 1 hour in seconds
+
 
 class SentrySettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='SENTRY_')

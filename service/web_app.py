@@ -62,8 +62,8 @@ def init_middleware(app: FastAPI):
 
             return response
 
-    @app.exception_handler(api_errors.HttpPnlServiceException)
-    async def handle_http_tron_service_response(request: Request, exc: api_errors.HttpPnlServiceException) -> Response:
+    @app.exception_handler(api_errors.HttpServiceException)
+    async def handle_http_service_response(request: Request, exc: api_errors.HttpServiceException) -> Response:
         return JSONResponse(
             status_code=exc.status_code,
             content=dict(

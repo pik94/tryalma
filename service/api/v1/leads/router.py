@@ -15,11 +15,12 @@ from service.container import MainContainer
 from service.deps import get_container, get_database_session
 from service.general.auth import auth_jwt
 
-router = APIRouter()
+router = APIRouter(prefix='/internal', tags=['Internal leads'])
+public_router = APIRouter(prefix='/leads', tags=['Leads'])
 
 
-@router.post(
-    '/leads',
+@public_router.post(
+    '',
     response_model=LeadResponse,
     status_code=status.HTTP_201_CREATED,
 )

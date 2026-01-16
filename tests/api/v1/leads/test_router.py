@@ -84,7 +84,7 @@ async def test_get_leads_success(auth_jwt_test_client: AsyncClient, create_lead)
     await create_lead(first_name='Charlie', last_name='Brown')
 
     # Make authenticated request
-    response = await auth_jwt_test_client.get('/api/v1/leads?page=1&page_size=2')
+    response = await auth_jwt_test_client.get('/api/v1/internal/leads?page=1&page_size=2')
 
     # Verify response
     assert response.status_code == HTTP_200_OK
@@ -116,7 +116,7 @@ async def test_get_leads_success(auth_jwt_test_client: AsyncClient, create_lead)
 async def test_get_leads_auth_error(not_auth_test_client: AsyncClient):
     """Test get leads without authentication returns 401 error."""
     # Make unauthenticated request
-    response = await not_auth_test_client.get('/api/v1/leads')
+    response = await not_auth_test_client.get('/api/v1/internal/leads')
 
     # Verify authentication error
     assert response.status_code == HTTP_401_UNAUTHORIZED
@@ -128,7 +128,7 @@ async def test_get_lead_by_id_success(auth_jwt_test_client: AsyncClient, create_
     created_lead = await create_lead(first_name='Test', last_name='User', email='test.user@example.com')
 
     # Make authenticated request
-    response = await auth_jwt_test_client.get(f'/api/v1/leads/{created_lead.id}')
+    response = await auth_jwt_test_client.get(f'/api/v1/internal/leads/{created_lead.id}')
 
     # Verify response
     assert response.status_code == HTTP_200_OK
@@ -150,7 +150,7 @@ async def test_get_lead_by_id_not_found(auth_jwt_test_client: AsyncClient):
     non_existent_id = uuid4()
 
     # Make authenticated request
-    response = await auth_jwt_test_client.get(f'/api/v1/leads/{non_existent_id}')
+    response = await auth_jwt_test_client.get(f'/api/v1/internal/leads/{non_existent_id}')
 
     # Verify not found error
     assert response.status_code == HTTP_404_NOT_FOUND
@@ -164,7 +164,7 @@ async def test_get_lead_by_id_auth_error(not_auth_test_client: AsyncClient):
     lead_id = uuid4()
 
     # Make unauthenticated request
-    response = await not_auth_test_client.get(f'/api/v1/leads/{lead_id}')
+    response = await not_auth_test_client.get(f'/api/v1/internal/leads/{lead_id}')
 
     # Verify authentication error
     assert response.status_code == HTTP_401_UNAUTHORIZED
@@ -184,7 +184,7 @@ async def test_update_lead_status_success(auth_jwt_test_client: AsyncClient, cre
     update_data = {'status': LeadStatus.REACHED_OUT.value, 'reached_out_by': str(attorney.id)}
 
     # Make authenticated request
-    response = await auth_jwt_test_client.patch(f'/api/v1/leads/{created_lead.id}', json=update_data)
+    response = await auth_jwt_test_client.patch(f'/api/v1/internal/leads/{created_lead.id}', json=update_data)
 
     # Verify response
     assert response.status_code == HTTP_200_OK
@@ -209,7 +209,7 @@ async def test_update_lead_status_partial_update(auth_jwt_test_client: AsyncClie
     update_data = {'status': LeadStatus.EMAIL_SENT.value}
 
     # Make authenticated request
-    response = await auth_jwt_test_client.patch(f'/api/v1/leads/{created_lead.id}', json=update_data)
+    response = await auth_jwt_test_client.patch(f'/api/v1/internal/leads/{created_lead.id}', json=update_data)
 
     # Verify response
     assert response.status_code == HTTP_200_OK
@@ -228,7 +228,7 @@ async def test_update_lead_status_not_found(auth_jwt_test_client: AsyncClient):
     update_data = {'status': LeadStatus.REACHED_OUT.value}
 
     # Make authenticated request
-    response = await auth_jwt_test_client.patch(f'/api/v1/leads/{non_existent_id}', json=update_data)
+    response = await auth_jwt_test_client.patch(f'/api/v1/internal/leads/{non_existent_id}', json=update_data)
 
     # Verify not found error
     assert response.status_code == HTTP_404_NOT_FOUND
@@ -244,7 +244,7 @@ async def test_update_lead_status_auth_error(not_auth_test_client: AsyncClient):
     update_data = {'status': LeadStatus.REACHED_OUT.value}
 
     # Make unauthenticated request
-    response = await not_auth_test_client.patch(f'/api/v1/leads/{lead_id}', json=update_data)
+    response = await not_auth_test_client.patch(f'/api/v1/internal/leads/{lead_id}', json=update_data)
 
     # Verify authentication error
     assert response.status_code == HTTP_401_UNAUTHORIZED

@@ -17,6 +17,7 @@ A FastAPI-based service for managing legal leads and attorney assignments. The s
 - `GET /api/v1/leads/{lead_id}` - Get specific lead details (authenticated)
 - `PATCH /api/v1/leads/{lead_id}` - Update lead status and assignment (authenticated)
 - `GET /api/v1/healthcheck` - Service health status
+- `GET /docs` - Get the swagger docs
 
 ### Background Tasks
 - **Email Automation**: Automatically sends welcome emails to registered leads

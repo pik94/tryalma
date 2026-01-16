@@ -16,6 +16,7 @@ from service import settings
 from service.database.models.healthchecks import ServiceType
 from service.settings import SchedulerSettings
 from service.tasks.healthcheck import update_healthcheck_data
+from service.tasks.send_email import send_emails_to_leads
 from service.utils.loggers import prepare_logger
 from service.utils.sentry import init_sentry
 
@@ -43,9 +44,11 @@ class SchedulerContainer:
 
     def add_jobs(self, container: MainContainer) -> None:
         logger.info('Adding scheduler jobs')
+
+        # Healthcheck job
         if self.scheduler_settings.update_healthcheck_enabled:
             logger.info(
-                f'Enable update_healthcheck_data by schedule: {self.scheduler_settings.update_healthcheck_enabled}'
+                f'Enable update_healthcheck_data by schedule: {self.scheduler_settings.update_healthcheck_schedule}'
             )
             self.scheduler.add_job(
                 update_healthcheck_data,
@@ -53,6 +56,17 @@ class SchedulerContainer:
                 id='update_healthcheck_data',
                 replace_existing=True,
                 args=(container, ServiceType.SCHEDULER),
+            )
+
+        # Email job
+        if self.scheduler_settings.send_emails_enabled:
+            logger.info(f'Enable send_emails_to_leads by schedule: {self.scheduler_settings.send_emails_schedule}')
+            self.scheduler.add_job(
+                send_emails_to_leads,
+                trigger=CronTrigger.from_crontab(self.scheduler_settings.send_emails_schedule),
+                id='send_emails_to_leads',
+                replace_existing=True,
+                args=(container,),
             )
 
         logger.info('Jobs added')

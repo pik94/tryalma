@@ -13,6 +13,10 @@ from service.settings import (
 )
 from tests.database.fixtures import (
     create_healthcheck,  # noqa: F401
+    create_lead,  # noqa: F401
+)
+from tests.database.attorneys.fixtures import (
+    create_attorney,  # noqa: F401
 )
 
 
